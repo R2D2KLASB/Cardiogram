@@ -94,6 +94,8 @@ def listToGcode(list):
         y = str(list[1][i])
     
         f.write("G01 X" + x + " Y"+ y + "\n")
+        
+    f.write("G00 X0 Y0")
     f.close()
 listToGcode(gcodelist)
 
