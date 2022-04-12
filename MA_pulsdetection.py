@@ -1,4 +1,3 @@
-#import random
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.ndimage.filters import maximum_filter
@@ -13,28 +12,23 @@ t=time.time()
 
 loop= True
 while loop:
-#for i in range(0,1000):
     line = ser.readline()   # read a byte
     if line:
-        string = line.decode(errors='ignore')  # convert the byte string to a unicode string
+        string = line.decode(errors='ignore')       # convert the byte string to a unicode string
         num = int(string)
         if len(lst) > 0 and num<800:
-            if num-lst[-1]>100 or num-lst[-1]>-100:# convert the unicode string to an int
+            if num-lst[-1]>100 or num-lst[-1]>-100: # convert the unicode string to an int
                 lst.append(num)
         else:
             lst.append(num)
             #print(num)
-    if time.time() - t > 3:
+    if time.time() - t > 3:     # 3 second measurement
         loop=False    
     #time.sleep(0.01)
 
 print(len(lst))
-#lst=[1,2,3,4,6,12,6,3,2,1,2,1,5,5,4,3,5,5,6,6,7,20,8,5,6,5,7,5,4,4,5,3,2,1,2,3,1,2,1,2,1,0,2,3,4,5,3,5,7,6,7,8,7,9,11,12,15,20,30,20,15,12,16,12,10,12,10,4,10,18,1,0,0,0,0,0,0,0,0]
-#
-# for i in range(0,100):
-#     n = random.random() * 10
-#     lst.append(n)
-def movingAvg(LST):
+
+def movingAvg(LST):             # Moving average of 10
     MaLst = []
     MaLst.append(LST[0])
     MaLst.append(LST[1])
@@ -59,22 +53,22 @@ for i in range(len(lst)):
 maximum = max(lst)
 for i in range(len(lst)):
     lst[i] *= (25000/maximum)
-MaLsT = movingAvg(lst)
+MovingAvg10 = movingAvg(lst)
 
     
-print(MaLsT[50])
-MaLst = movingAvg(MaLsT)
-measurements=[]
+print(MovingAvg10[50])
+MovingAvg100 = movingAvg(MovingAvg10)
+XCoordinates=[]
 for i in range(0,len(lst),1):
-    measurements.append(i * 15)
+    XCoordinates.append(i * 15)
 
-plt.plot(measurements,MaLst, label = "Moving average(5)")#, linestyle="-.")
+plt.plot(XCoordinates,MovingAvg100, label = "Moving average(100)")#, linestyle="-.")
 
 # put your data here
 data = np.array(lst)
 
-filter_win_size = 15
-peak_intensity_threshold = 6
+filter_win_size = 12
+peak_intensity_threshold = (maximum - minimum) / 4
 
 max_data = maximum_filter(data, filter_win_size)
 min_data = -maximum_filter(-data, filter_win_size)
@@ -91,7 +85,7 @@ peak_mask = np.correlate(peak_mask, [-1, 1], mode='same') == 2
 max_places = np.where(peak_mask)[0]
 
 
-gcodelist =[measurements, MaLst]
+gcodelist =[XCoordinates, MovingAvg100]
 def listToGcode(list):
     f = open("heartbeat.gcode", "w")
 
@@ -105,7 +99,7 @@ listToGcode(gcodelist)
 
 
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots()        
 r = range(data.shape[0])
 ax.plot(r, data, 'k')
 ax.plot(max_places, data[max_places], 'xr')
