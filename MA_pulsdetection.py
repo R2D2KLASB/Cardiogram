@@ -30,15 +30,15 @@ print(len(lst))
 
 def movingAvg(LST):             # Moving average of 10
     MaLst = []
-    MaLst.append(LST[0])
-    MaLst.append(LST[1])
-    MaLst.append(LST[2])
-    MaLst.append(LST[3])
-    MaLst.append(LST[4])
-    MaLst.append(LST[5])
-    MaLst.append(LST[6])
-    MaLst.append(LST[7])
-    MaLst.append(LST[8])
+    MaLst.append(int(LST[0]))
+    MaLst.append(int(LST[1]))
+    MaLst.append(int(LST[2]))
+    MaLst.append(int(LST[3]))
+    MaLst.append(int(LST[4]))
+    MaLst.append(int(LST[5]))
+    MaLst.append(int(LST[6]))
+    MaLst.append(int(LST[7]))
+    MaLst.append(int(LST[8]))
 
     for i in range(9, len(LST), 1):
         MA = (LST[i] + LST[i-1] + LST[i-2] + LST[i-3] + LST[i-4]+LST[i-5] + LST[i-6] + LST[i-7] + LST[i-8] + LST[i-9]) / 10
