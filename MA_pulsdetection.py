@@ -84,6 +84,7 @@ peak_mask = np.correlate(peak_mask, [-1, 1], mode='same') == 2
 
 max_places = np.where(peak_mask)[0]
 
+print("heartrate: "+str(int(len(max_places)*7.5)))
 
 gcodelist =[XCoordinates, MovingAvg100]
 def listToGcode(list):
