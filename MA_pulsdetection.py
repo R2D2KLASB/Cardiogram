@@ -67,8 +67,8 @@ plt.plot(XCoordinates,MovingAvg100, label = "Moving average(100)")#, linestyle="
 # put your data here
 data = np.array(lst)
 
-filter_win_size = 12
-peak_intensity_threshold = (maximum - minimum) / 4
+filter_win_size = 150
+peak_intensity_threshold = (maximum - minimum) / 2
 
 max_data = maximum_filter(data, filter_win_size)
 min_data = -maximum_filter(-data, filter_win_size)
