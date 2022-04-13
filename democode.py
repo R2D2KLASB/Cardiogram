@@ -4,9 +4,14 @@ from scipy.ndimage.filters import maximum_filter
 import serial
 import time
 import random
+import RPi.GPIO as GPIO
+import os
+from shutil import copyfile
+
 
 ser = serial.Serial('/dev/ttyUSB0', 230400 , timeout=0.1)
-
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 def readSerial():
     t=time.time()
@@ -52,7 +57,7 @@ def scale():
     
 
 def listToGcode(list):
-    f = open("heartbeat.gcode", "w")
+    f = open("~/Infrastructuur-dev/gcodeSend.txt", "w")
 
     for i in range(len(list[0])):
         x = str(list[0][i])
@@ -60,12 +65,13 @@ def listToGcode(list):
     
         f.write("G01 X" + x + " Y"+ y + "\n")
         
-    f.write("G00 X0 Y0")
+    f.write("G28\n")
     f.close()
 
 
+        
 while True:
-    if readbutton: #moet nog gedaan worden
+    if GPIO.input(18) == GPIO.HIGH:
         try:
             lst=[]
             time.sleep(3)
@@ -79,4 +85,5 @@ while True:
             gcodelist =[XCoordinates, MovingAvg100]
             listToGcode(gcodelist)
         except:
-            sendPicture(random.randint(12)) #functie moet nog gemaakt worden
+            randnum = random.randint(13)
+            copyfile(f"~/Infrastructuur-dev/heartbeat{randnum}.gcode", f"~/Infrastructuur-dev/gcodeSend.txt")
